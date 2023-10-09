@@ -134,7 +134,7 @@ const VerifyPage = () => {
               <Paper
                 sx={{
                   padding: "20px",
-                  maxWidth: "270px",
+                  maxWidth: "350px",
                   boxShadow: "none",
                   background: "transparent",
                   border: "none",
