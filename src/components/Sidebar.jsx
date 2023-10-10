@@ -1,27 +1,49 @@
-import React, { useState } from "react";
-import logo from "../assets/logo.png";
-import { Box, Divider, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Divider } from "@mui/material";
 import { LuCircle } from "react-icons/lu";
 import { BiSolidDashboard } from "react-icons/bi";
 import { FaPrescription } from "react-icons/fa";
-
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { resetUser } from "../redux/actions/userAction";
+import logo from "../assets/logo.png";
 
 const Sidebar = () => {
-  const [dashboardClicked, setDashboardClicked] = useState(false);
-  const [prescriptionClicked, setPrescriptionClicked] = useState(false);
+  const [activeLink, setActiveLink] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleDashboardClick = () => {
-    setDashboardClicked(true);
-    setPrescriptionClicked(false);
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    dispatch(resetUser());
+    logout();
+    navigate("/login");
   };
 
-  const handlePrescriptionClick = () => {
-    setDashboardClicked(false);
-    setPrescriptionClicked(true);
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
   };
+
+  useEffect(() => {
+    // Get the current route pathname from the window location
+    const currentPathname = window.location.pathname;
+
+    // Update the activeLink state based on the current pathname
+    if (currentPathname === "/dashboard") {
+      setActiveLink("dashboard");
+    } else if (currentPathname === "/create-prescription") {
+      setActiveLink("prescription");
+    } else if (currentPathname === "/support") {
+      setActiveLink("support");
+    } else if (currentPathname === "/settings") {
+      setActiveLink("settings");
+    }
+  }, []);
+
   return (
-    <Box className="border-r border-[#75757] ">
+    <Box className="border-r border-[#75757]">
       <Box
         sx={{
           padding: "15px",
@@ -46,6 +68,7 @@ const Sidebar = () => {
           <Box>
             <Link to="/dashboard">
               <Box
+                onClick={() => handleLinkClick("dashboard")}
                 sx={{
                   display: "flex",
                   fontSize: "15px",
@@ -54,18 +77,19 @@ const Sidebar = () => {
                   paddingY: "7px",
                   paddingX: "10px",
                   borderRadius: "5px",
-                  backgroundColor: dashboardClicked ? "#54b1f0" : "",
-                  color: dashboardClicked ? "#ffffff" : "",
                   cursor: "pointer",
+                  backgroundColor:
+                    activeLink === "dashboard" ? "#54b1f0" : "#fff",
+                  color: activeLink === "dashboard" ? "#fff" : "#000",
                 }}
-                onClick={handleDashboardClick}
               >
                 <BiSolidDashboard className="mr-2 mt-[5px]" /> Dashboard
               </Box>
             </Link>
 
-            <Link to="/dashboard">
+            <Link to="/create-prescription">
               <Box
+                onClick={() => handleLinkClick("prescription")}
                 sx={{
                   display: "flex",
                   fontSize: "15px",
@@ -75,11 +99,11 @@ const Sidebar = () => {
                   paddingY: "7px",
                   borderRadius: "5px",
                   textAlign: "center",
-                  backgroundColor: prescriptionClicked ? "#54b1f0" : "",
-                  color: prescriptionClicked ? "#ffffff" : "",
                   cursor: "pointer",
+                  backgroundColor:
+                    activeLink === "prescription" ? "#54b1f0" : "#fff",
+                  color: activeLink === "prescription" ? "#fff" : "#000",
                 }}
-                onClick={handlePrescriptionClick}
               >
                 <FaPrescription className="mr-2 mt-[5px]" /> Create Prescription
               </Box>
@@ -93,24 +117,49 @@ const Sidebar = () => {
               marginLeft: "30px",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                marginY: "30px",
-              }}
-            >
-              <LuCircle className="mr-[5px] mt-[5px]" />
-              <Link to="/support">Support</Link>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                marginBottom: "25px",
-              }}
-            >
-              <LuCircle className="mr-[5px] mt-[5px]" />
-              <Link to="/settings">Setting</Link>
-            </Box>
+            <Link to="/support">
+              <Box
+                onClick={() => handleLinkClick("support")}
+                sx={{
+                  display: "flex",
+                  fontSize: "15px",
+                  width: "80%",
+                  marginY: "20px",
+                  paddingY: "7px",
+                  paddingX: "10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  backgroundColor:
+                    activeLink === "support" ? "#54b1f0" : "#fff",
+                  color: activeLink === "support" ? "#fff" : "#000",
+                }}
+              >
+                <LuCircle className="mr-[5px] mt-[5px]" />
+                Support
+              </Box>
+            </Link>
+
+            <Link to="/settings">
+              <Box
+                onClick={() => handleLinkClick("settings")}
+                sx={{
+                  display: "flex",
+                  fontSize: "15px",
+                  width: "80%",
+                  marginY: "20px",
+                  paddingY: "7px",
+                  paddingX: "10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  backgroundColor:
+                    activeLink === "settings" ? "#54b1f0" : "#fff",
+                  color: activeLink === "settings" ? "#fff" : "#000",
+                }}
+              >
+                <LuCircle className="mr-[5px] mt-[5px]" />
+                Setting
+              </Box>
+            </Link>
           </Box>
           <Box>
             <Box
@@ -125,8 +174,10 @@ const Sidebar = () => {
               sx={{
                 display: "flex",
                 marginY: "25px",
-                marginLeft: "30px",
+                marginLeft: "40px",
+                cursor: "pointer",
               }}
+              onClick={handleLogout}
             >
               <LuCircle className="mr-[5px] mt-[5px]" />
               Logout

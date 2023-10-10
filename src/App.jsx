@@ -6,6 +6,9 @@ import LoginPage from "./pages/LoginPage";
 import VerifyPage from "./pages/VerifyPage";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
+import CreatePrescriptionPage from "./pages/CreatePrescriptionPage";
+import SettingPage from "./pages/SettingPage";
+import SupportPage from "./pages/SupportPage";
 
 function App() {
   return (
@@ -16,6 +19,12 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route
+            path="/create-prescription"
+            element={<CreatePrescriptionPage />}
+          />
+          <Route path="/settings" element={<SettingPage />} />
+          <Route path="/support" element={<SupportPage />} />
         </Routes>
         <ToastContainer
           position="top-center"

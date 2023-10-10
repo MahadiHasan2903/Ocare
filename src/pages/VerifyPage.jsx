@@ -1,21 +1,15 @@
 import React, { useState } from "react";
-
-// Importing Material-UI components
 import { Grid, Paper, Button, Typography, TextField, Box } from "@mui/material";
-
-// Importing images and icons
-import backgroundImage from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import { AiOutlineCopyright } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// Importing routing and data
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "../axios.js";
-
-// Importing authentication context
+import backgroundImage from "../assets/login-bg.png";
+import logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
+import { setUser } from "../redux/actions/userAction.js";
 
 const VerifyPage = () => {
   //getting the currecnt year
@@ -23,6 +17,7 @@ const VerifyPage = () => {
 
   // State variables for user input and error handling
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { userData } = useAuth();
   const [error, setError] = useState(null);
   const [otp, setOtp] = useState("");
@@ -53,6 +48,8 @@ const VerifyPage = () => {
 
       // Checking if the login was successful or not
       if (response.data.success) {
+        // Dispatch the setUser action to store user details in Redux
+        dispatch(setUser(response.data.data));
         toast.success("Login successful!");
         navigate("/dashboard"); // Redirect to the home page on success
       } else {
@@ -62,7 +59,6 @@ const VerifyPage = () => {
       setError("Login failed. Please check your credentials.");
     }
   };
-
   const handleResendClick = async () => {
     try {
       // Make an HTTP POST request to resend OTP

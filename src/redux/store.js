@@ -3,7 +3,7 @@ import { applyMiddleware, combineReducers } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { createLogger } from "redux-logger";
-import { userReducer } from "./reducers/userReducer";
+import { reducer } from "./reducers/allReducers";
 
 // Redux Persist configuration
 const persistConfig = {
@@ -16,10 +16,6 @@ const logger = createLogger();
 
 // Combine Redux Persist and Redux Logger middleware
 const middleware = applyMiddleware(logger);
-
-const reducer = combineReducers({
-  user: userReducer,
-});
 
 // Create the persisted reducer
 const persistedReducer = persistReducer(persistConfig, reducer);

@@ -1,32 +1,24 @@
+// userReducer.js
 import { createReducer } from "@reduxjs/toolkit";
+import { setUser, resetUser } from "../actions/userAction";
 
 const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
-  successMessage: null,
-  user: [],
+  user: null,
 };
 
-export const userReducer = createReducer(initialState, (builder) => {
+const userReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase("LoadUserRequest", (state) => {
-      state.loading = true;
-    })
-    .addCase("LoadUserSuccess", (state, action) => {
+    .addCase(setUser, (state, action) => {
       state.isAuthenticated = true;
       state.loading = false;
       state.user = action.payload;
     })
-    .addCase("LoadUserFail", (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-      state.isAuthenticated = false;
-    })
-    .addCase("clearErrors", (state) => {
-      state.error = null;
-    })
-    .addCase("clearMessages", (state) => {
-      state.successMessage = null;
+    .addCase(resetUser, (state) => {
+      state.user = null;
     });
 });
+
+export default userReducer;

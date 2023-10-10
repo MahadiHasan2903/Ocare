@@ -1,16 +1,16 @@
 import { Box } from "@mui/material";
 import React from "react";
 
-const Dashboard = () => {
+const CreatePrescription = () => {
   return (
     <Box
       style={{
         padding: "15px",
       }}
     >
-      Dashboard
+      Create Prescription
     </Box>
   );
 };
 
-export default Dashboard;
+export default CreatePrescription;

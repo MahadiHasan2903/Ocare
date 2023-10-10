@@ -1,9 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import { AiOutlineSearch } from "react-icons/ai";
-import doctor from "../assets/doctor.png";
 
 const Header = () => {
+  const user = useSelector((state) => state.user.user);
+
   return (
     <Box
       sx={{
@@ -40,18 +42,24 @@ const Header = () => {
       <Box
         sx={{
           display: "flex",
+          alignItems: "center",
+          marginTop: "-10px",
         }}
       >
-        <Box>Major Gen. K. M. Omar Hasan</Box>
-        <Box
-          sx={{
-            width: "40px",
-            height: "40px",
-            marginLeft: "20px",
-          }}
-        >
-          <img src={doctor} alt="profile" />
-        </Box>
+        {user && (
+          <>
+            <Box>{user.user_details.profile.name}</Box>
+            <img
+              src={user.user_details.profile.profile_avatar.url}
+              alt="avatar"
+              style={{
+                width: "40px",
+                height: "40px",
+                marginLeft: "20px",
+              }}
+            />
+          </>
+        )}
       </Box>
     </Box>
   );
