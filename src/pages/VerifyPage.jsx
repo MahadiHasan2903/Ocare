@@ -22,9 +22,9 @@ const VerifyPage = () => {
   const [error, setError] = useState(null);
   const [otp, setOtp] = useState("");
 
-  const country_code = userData.country_code;
+  const country_code = userData?.country_code;
 
-  const phone_number = userData.phone_number;
+  const phone_number = userData?.phone_number;
 
   // Function to obscure part of the phone number for privacy
   const unRevealedPhoneNumber = (phone_number) => {

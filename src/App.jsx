@@ -9,6 +9,7 @@ import DashboardPage from "./pages/DashboardPage";
 import CreatePrescriptionPage from "./pages/CreatePrescriptionPage";
 import SettingPage from "./pages/SettingPage";
 import SupportPage from "./pages/SupportPage";
+import PatienstPage from "./pages/PatientsPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           />
           <Route path="/settings" element={<SettingPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/patients" element={<PatienstPage />} />
         </Routes>
         <ToastContainer
           position="top-center"

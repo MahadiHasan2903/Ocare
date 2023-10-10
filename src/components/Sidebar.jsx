@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Divider } from "@mui/material";
 import { LuCircle } from "react-icons/lu";
 import { BiSolidDashboard } from "react-icons/bi";
+import { BsReverseListColumnsReverse } from "react-icons/bs";
+
 import { FaPrescription } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,6 +37,8 @@ const Sidebar = () => {
       setActiveLink("dashboard");
     } else if (currentPathname === "/create-prescription") {
       setActiveLink("prescription");
+    } else if (currentPathname === "/patients") {
+      setActiveLink("patients");
     } else if (currentPathname === "/support") {
       setActiveLink("support");
     } else if (currentPathname === "/settings") {
@@ -49,7 +53,9 @@ const Sidebar = () => {
           padding: "15px",
         }}
       >
-        <img src={logo} alt="logo" />
+        <Link to="/">
+          <img src={logo} alt="logo" />
+        </Link>
       </Box>
 
       <Box
@@ -106,6 +112,27 @@ const Sidebar = () => {
                 }}
               >
                 <FaPrescription className="mr-2 mt-[5px]" /> Create Prescription
+              </Box>
+            </Link>
+            <Link to="/patients">
+              <Box
+                onClick={() => handleLinkClick("patients")}
+                sx={{
+                  display: "flex",
+                  fontSize: "15px",
+                  width: "80%",
+                  marginY: "20px",
+                  paddingY: "7px",
+                  paddingX: "10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  backgroundColor:
+                    activeLink === "patients" ? "#54b1f0" : "#fff",
+                  color: activeLink === "patients" ? "#fff" : "#000",
+                }}
+              >
+                <BsReverseListColumnsReverse className="mr-2 mt-[5px]" />{" "}
+                Patient List
               </Box>
             </Link>
           </Box>
