@@ -2,7 +2,6 @@ import React from "react";
 import { Box } from "@mui/material";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import Support from "../components/Support";
 import Patients from "../components/Patients";
 
 const PatientsPage = () => {
