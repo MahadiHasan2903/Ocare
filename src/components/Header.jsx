@@ -19,14 +19,15 @@ const Header = () => {
           position: "relative",
           borderRadius: "10px",
           width: "250px",
-          height: "30px",
-          marginBottom: "10px",
+          height: "40px",
           backgroundColor: "#f9f9f9",
+          marginTop: "-7px",
         }}
       >
         <Box
           sx={{
             position: "absolute",
+            marginTop: "5px",
           }}
         >
           <button className="absolute">

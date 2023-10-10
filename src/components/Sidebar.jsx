@@ -47,7 +47,7 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <Box className="border-r border-[#75757]">
+    <Box className="h-[100%] border-r border-[#75757]">
       <Box
         sx={{
           padding: "15px",

@@ -80,10 +80,17 @@ const Patients = () => {
         marginTop: "30px",
       }}
     >
-      <Box className="text-center text-3xl">Patient List</Box>
+      <Box
+        sx={{
+          paddingY: "10px",
+        }}
+        className="text-center text-3xl"
+      >
+        Patient List
+      </Box>
       <Box style={{ padding: "15px" }}>
         <TableContainer
-          className="overflow-y-scroll"
+          className="overflow-scroll"
           component={Paper}
           sx={{
             marginRight: "5px",
@@ -110,7 +117,7 @@ const Patients = () => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10]}
+          rowsPerPageOptions={[5, 10, 20]}
           component="div"
           count={patients.length}
           rowsPerPage={rowsPerPage}
