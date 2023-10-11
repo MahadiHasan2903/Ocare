@@ -10,54 +10,35 @@ import {
   Paper,
   TablePagination,
 } from "@mui/material";
-import axios from "../axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPatients } from "../redux/actions/patientAction";
 
 const Patients = () => {
-  // Get user data from Redux store
-  const user = useSelector((state) => state.user.user);
+  // Local state to manage pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Initialize state variables
-  const [patients, setPatients] = useState([]); // To store patient data
-  const [page, setPage] = useState(0); // Current page number
-  const [rowsPerPage, setRowsPerPage] = useState(10); // Number of rows per page
+  // Get the patients data from Redux store
+  const patients = useSelector((state) => state.patient.patients);
+  const dispatch = useDispatch();
 
-  // Fetch patient data from the server when the user changes
+  // Fetch patients data from the server when the component mounts
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = user?.access_token;
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
+    dispatch(fetchPatients());
+  }, [dispatch]);
 
-        // Fetch patient data using Axios
-        const response = await axios.get("/doctor-panel/patient/list", {
-          headers,
-        });
-        console.log(response.data.data);
-        setPatients(response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    // Call fetchData when the "user" dependency changes
-    fetchData();
-  }, [user]);
-
-  // Handle page change
+  // Handle page change in the table
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  // Handle rows per page change
+  // Handle rows per page change in the table
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when the number of rows per page changes
+    setPage(0);
   };
 
-  // Render the list of patients with appropriate pagination
+  // Display patients in the table rows
   const displayPatients = Array.isArray(patients)
     ? patients
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -73,7 +54,6 @@ const Patients = () => {
         ))
     : null;
 
-  // Render the component
   return (
     <Box
       sx={{
@@ -88,37 +68,29 @@ const Patients = () => {
       >
         Patient List
       </Box>
-      <Box style={{ padding: "15px" }}>
+      <Box sx={{ paddingX: "10px", paddingBottom: "20px" }}>
         <TableContainer
-          className="overflow-scroll"
           component={Paper}
           sx={{
             marginRight: "5px",
+            maxHeight: rowsPerPage > 10 ? "75vh" : "none",
+            overflowY: rowsPerPage > 10 ? "scroll" : "auto",
           }}
         >
-          <Table sx={{}}>
+          <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <b>Name</b>
-                </TableCell>
-                <TableCell>
-                  <b>Phone No</b>
-                </TableCell>
-                <TableCell>
-                  <b>Gender</b>
-                </TableCell>
-                <TableCell>
-                  <b>Availability</b>
-                </TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Phone No</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>Availability</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{displayPatients}</TableBody>
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 20]}
-          component="div"
+          rowsPerPageOptions={[5, 10, 20, 50]}
           count={patients.length}
           rowsPerPage={rowsPerPage}
           page={page}

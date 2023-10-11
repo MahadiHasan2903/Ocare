@@ -3,6 +3,7 @@ import { Box, Divider } from "@mui/material";
 import { LuCircle } from "react-icons/lu";
 import { BiSolidDashboard } from "react-icons/bi";
 import { BsReverseListColumnsReverse } from "react-icons/bs";
+import { PiScrollFill } from "react-icons/pi";
 
 import { FaPrescription } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -39,6 +40,8 @@ const Sidebar = () => {
       setActiveLink("prescription");
     } else if (currentPathname === "/patients") {
       setActiveLink("patients");
+    } else if (currentPathname === "/scroll") {
+      setActiveLink("scroll");
     } else if (currentPathname === "/support") {
       setActiveLink("support");
     } else if (currentPathname === "/settings") {
@@ -133,6 +136,26 @@ const Sidebar = () => {
               >
                 <BsReverseListColumnsReverse className="mr-2 mt-[5px]" />{" "}
                 Patient List
+              </Box>
+            </Link>
+            <Link to="/scroll">
+              <Box
+                onClick={() => handleLinkClick("scroll")}
+                sx={{
+                  display: "flex",
+                  fontSize: "15px",
+                  width: "80%",
+                  marginY: "20px",
+                  paddingY: "7px",
+                  paddingX: "10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  backgroundColor: activeLink === "scroll" ? "#54b1f0" : "#fff",
+                  color: activeLink === "scroll" ? "#fff" : "#000",
+                }}
+              >
+                <PiScrollFill className="mr-2 mt-[5px]" />
+                Infinite Patient
               </Box>
             </Link>
           </Box>

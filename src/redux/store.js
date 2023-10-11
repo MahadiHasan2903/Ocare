@@ -1,32 +1,30 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { applyMiddleware, combineReducers } from "redux";
+import { createLogger } from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { createLogger } from "redux-logger";
 import { reducer } from "./reducers/allReducers";
+import thunk from "redux-thunk";
 
-// Redux Persist configuration
+// Configuration for Redux Persist
 const persistConfig = {
   key: "root",
   storage,
 };
 
-// Create a Redux Logger instance
+// Create a logger for Redux actions and state changes
 const logger = createLogger();
 
-// Combine Redux Persist and Redux Logger middleware
-const middleware = applyMiddleware(logger);
-
-// Create the persisted reducer
+// Apply Redux Persist to  reducer
 const persistedReducer = persistReducer(persistConfig, reducer);
 
-// Create the Redux store
-const store = configureStore(
-  {
-    reducer: persistedReducer,
-  },
-  middleware
-);
+// Configure the Redux store with middleware
+const store = configureStore({
+  reducer: persistedReducer, // The root reducer with Redux Persist
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(thunk, logger), // Applied Redux Thunk and the logger middleware
+});
+
+// Create a persistor to persist the Redux store
 const persistor = persistStore(store);
 
 export { store, persistor };

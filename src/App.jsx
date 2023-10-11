@@ -10,6 +10,7 @@ import CreatePrescriptionPage from "./pages/CreatePrescriptionPage";
 import SettingPage from "./pages/SettingPage";
 import SupportPage from "./pages/SupportPage";
 import PatienstPage from "./pages/PatientsPage";
+import InfinniteSchollingPage from "./pages/InfiniteScrollingPage";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
             path="/create-prescription"
             element={<CreatePrescriptionPage />}
           />
+          <Route path="/scroll" element={<InfinniteSchollingPage />} />
+
           <Route path="/settings" element={<SettingPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/patients" element={<PatienstPage />} />
