@@ -15,8 +15,9 @@ const PatientsPage = () => {
       <Box
         sx={{
           width: "300px",
-          height: "102vh",
+          height: "100vh",
           backgroundColor: "#ffffff",
+          overflow: "hidden",
         }}
       >
         <Sidebar />
@@ -24,7 +25,8 @@ const PatientsPage = () => {
       <Box className=" w-full">
         <Box
           sx={{
-            height: "7vh",
+            height: "8vh",
+            overflow: "hidden",
           }}
         >
           <Header />
@@ -32,7 +34,8 @@ const PatientsPage = () => {
         <Box
           sx={{
             backgroundColor: "#f9f9f9",
-            height: "90vh",
+            height: "92vh",
+            overflowY: "hidden",
           }}
         >
           <Patients />

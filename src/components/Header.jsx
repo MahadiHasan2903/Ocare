@@ -49,7 +49,9 @@ const Header = () => {
       >
         {user && (
           <>
-            <Box>{user.user_details.profile.name}</Box>
+            <Box className="hidden 800px:block">
+              {user.user_details.profile.name}
+            </Box>
             <img
               src={user.user_details.profile.profile_avatar.url}
               alt="avatar"

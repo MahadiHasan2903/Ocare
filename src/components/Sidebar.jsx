@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { LuCircle } from "react-icons/lu";
 import { BiSolidDashboard } from "react-icons/bi";
 import { BsReverseListColumnsReverse } from "react-icons/bs";
@@ -92,7 +92,10 @@ const Sidebar = () => {
                   color: activeLink === "dashboard" ? "#fff" : "#000",
                 }}
               >
-                <BiSolidDashboard className="mr-2 mt-[5px]" /> Dashboard
+                <BiSolidDashboard className="mr-2 mt-[3px]" />{" "}
+                <Typography className="hidden 800px:block">
+                  Dashboard
+                </Typography>
               </Box>
             </Link>
 
@@ -114,7 +117,10 @@ const Sidebar = () => {
                   color: activeLink === "prescription" ? "#fff" : "#000",
                 }}
               >
-                <FaPrescription className="mr-2 mt-[5px]" /> Create Prescription
+                <FaPrescription className="mr-2 mt-[5px]" />
+                <Typography className="hidden 800px:block">
+                  Create Prescription
+                </Typography>
               </Box>
             </Link>
             <Link to="/patients">
@@ -134,8 +140,10 @@ const Sidebar = () => {
                   color: activeLink === "patients" ? "#fff" : "#000",
                 }}
               >
-                <BsReverseListColumnsReverse className="mr-2 mt-[5px]" />{" "}
-                Patient List
+                <BsReverseListColumnsReverse className="mr-2 mt-[5px]" />
+                <Typography className="hidden 800px:block">
+                  Patient List
+                </Typography>
               </Box>
             </Link>
             <Link to="/scroll">
@@ -155,7 +163,9 @@ const Sidebar = () => {
                 }}
               >
                 <PiScrollFill className="mr-2 mt-[5px]" />
-                Infinite Patient
+                <Typography className="hidden 800px:block">
+                  Infinite Scrolling
+                </Typography>
               </Box>
             </Link>
           </Box>

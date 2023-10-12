@@ -9,6 +9,7 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPatients } from "../redux/actions/patientAction";
@@ -21,6 +22,7 @@ const Patients = () => {
   // Get the patients data from Redux store
   const patients = useSelector((state) => state.patient.patients);
   const dispatch = useDispatch();
+  console.log(patients);
 
   // Fetch patients data from the server when the component mounts
   useEffect(() => {
@@ -37,6 +39,9 @@ const Patients = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(patients.length / rowsPerPage);
 
   // Display patients in the table rows
   const displayPatients = Array.isArray(patients)
@@ -57,18 +62,19 @@ const Patients = () => {
   return (
     <Box
       sx={{
-        marginTop: "30px",
+        margin: "10px",
       }}
     >
       <Box
         sx={{
-          paddingY: "10px",
+          textAlign: "center",
+          fontSize: "30px",
+          marginBottom: "10px",
         }}
-        className="text-center text-3xl"
       >
         Patient List
       </Box>
-      <Box sx={{ paddingX: "10px", paddingBottom: "20px" }}>
+      <Box sx={{ paddingX: "15px" }}>
         <TableContainer
           component={Paper}
           sx={{
@@ -89,14 +95,30 @@ const Patients = () => {
             <TableBody>{displayPatients}</TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 20, 50]}
-          count={patients.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 20, 50]}
+            count={patients.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          <Typography
+            sx={{
+              paddingRight: "30px",
+            }}
+          >
+            Page {page + 1} of {totalPages}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

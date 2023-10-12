@@ -1,29 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPatients } from "../redux/actions/patientAction";
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 
 const Scrolling = () => {
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patient.patients);
   const [visiblePatients, setVisiblePatients] = useState(5);
-  const contentRef = useRef(null); // Create a ref to the scrollable content
+  const [loading, setLoading] = useState(false); // Track loading state
+  const contentRef = useRef(null);
+  const sentinelRef = useRef(null);
 
-  // This function handles the scroll event and checks if we have reached the bottom of the content
-  const handleScroll = () => {
-    if (
-      contentRef.current &&
-      contentRef.current.scrollTop + contentRef.current.clientHeight >=
-        contentRef.current.scrollHeight
-    ) {
-      loadMorePatients(); // If we're at the bottom, load more patients
-    }
-  };
-
-  // Load more patients into the view
   const loadMorePatients = () => {
-    if (visiblePatients < patients.length) {
-      setVisiblePatients((prevVisiblePatients) => prevVisiblePatients + 5);
+    setLoading(true); // Start loading
+    if (visiblePatients + 5 <= patients.length) {
+      setTimeout(() => {
+        // Simulate an API request delay
+        setVisiblePatients((prevVisiblePatients) => prevVisiblePatients + 5);
+        setLoading(false); // Stop loading
+      }, 1000); // Adjust the delay as needed
+    } else {
+      setVisiblePatients(patients.length);
+      setLoading(false); // Stop loading
     }
   };
 
@@ -33,16 +37,38 @@ const Scrolling = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    contentRef.current.addEventListener("scroll", handleScroll);
-  }, []);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          loadMorePatients();
+        }
+      },
+      {
+        root: contentRef.current,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => {
+      if (sentinelRef.current) {
+        observer.unobserve(sentinelRef.current);
+      }
+    };
+  }, [loading]);
 
   return (
     <Box
       sx={{
         maxHeight: "92vh",
         overflowY: "scroll",
+        position: "relative",
       }}
-      ref={contentRef} // Attach the ref to the scrollable content
+      ref={contentRef}
     >
       <Typography
         variant="h3"
@@ -81,6 +107,19 @@ const Scrolling = () => {
           </Card>
         ))}
       </Box>
+
+      <Box ref={sentinelRef} style={{ height: "1px", width: "1px" }} />
+      {loading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "10px",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
     </Box>
   );
 };
