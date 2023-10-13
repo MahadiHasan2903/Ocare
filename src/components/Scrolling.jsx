@@ -13,7 +13,7 @@ const Scrolling = () => {
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patient.patients);
   const [visiblePatients, setVisiblePatients] = useState(5);
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false);
   const contentRef = useRef(null);
   const sentinelRef = useRef(null);
 
