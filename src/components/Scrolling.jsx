@@ -21,10 +21,9 @@ const Scrolling = () => {
     setLoading(true); // Start loading
     if (visiblePatients + 5 <= patients.length) {
       setTimeout(() => {
-        // Simulate an API request delay
         setVisiblePatients((prevVisiblePatients) => prevVisiblePatients + 5);
         setLoading(false); // Stop loading
-      }, 1000); // Adjust the delay as needed
+      }, 1000);
     } else {
       setVisiblePatients(patients.length);
       setLoading(false); // Stop loading
@@ -94,7 +93,7 @@ const Scrolling = () => {
                 Name: {patient.profile.name}
               </Typography>
               <Typography variant="body2">
-                Phone Number:{" "}
+                Phone Number:
                 {`${patient.country_code} ${patient.phone_number}`}
               </Typography>
               <Typography variant="body2">
