@@ -22,7 +22,6 @@ const Patients = () => {
   // Get the patients data from Redux store
   const patients = useSelector((state) => state.patient.patients);
   const dispatch = useDispatch();
-  console.log(patients);
 
   // Fetch patients data from the server when the component mounts
   useEffect(() => {
@@ -86,10 +85,10 @@ const Patients = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone No</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Availability</TableCell>
+                <TableCell sx={{ typography: "body1" }}>Name</TableCell>
+                <TableCell sx={{ typography: "body1" }}>Phone No</TableCell>
+                <TableCell sx={{ typography: "body1" }}>Gender</TableCell>
+                <TableCell sx={{ typography: "body1" }}>Availability</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{displayPatients}</TableBody>
@@ -97,14 +96,14 @@ const Patients = () => {
         </TableContainer>
 
         <Box
-          style={{
+          sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
           <TablePagination
-            rowsPerPageOptions={[5, 10, 20, 50]}
+            rowsPerPageOptions={[5, 10, 20]}
             count={patients.length}
             rowsPerPage={rowsPerPage}
             page={page}

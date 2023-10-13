@@ -23,6 +23,7 @@ const Header = () => {
           backgroundColor: "#f9f9f9",
           marginTop: "-7px",
         }}
+        className="border  focus:border-gray-500"
       >
         <Box
           sx={{
@@ -35,7 +36,7 @@ const Header = () => {
           </button>
           <input
             type="text"
-            className="bg-transparent focus:outline-none ml-8"
+            className="bg-transparent w-[200px]  focus:outline-none ml-8"
             placeholder="Seach..."
           />
         </Box>
