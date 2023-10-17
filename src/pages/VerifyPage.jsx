@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Grid, Paper, Button, Typography, TextField, Box } from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Button,
+  Typography,
+  TextField,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import { AiOutlineCopyright } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,7 +20,7 @@ import { useAuth } from "../context/AuthContext";
 import { setUser } from "../redux/actions/userAction.js";
 
 const VerifyPage = () => {
-  //getting the currecnt year
+  // Getting the current year
   const year = new Date().getFullYear();
 
   // State variables for user input and error handling
@@ -20,10 +28,9 @@ const VerifyPage = () => {
   const dispatch = useDispatch();
   const { userData } = useAuth();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
-
   const country_code = userData?.country_code;
-
   const phone_number = userData?.phone_number;
 
   // Function to obscure part of the phone number for privacy
@@ -39,6 +46,7 @@ const VerifyPage = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       // Make an HTTP POST request to verify OTP
       const response = await axios.post("/login", {
         otp: otp,
@@ -53,12 +61,15 @@ const VerifyPage = () => {
         toast.success("Login successful!");
         navigate("/dashboard"); // Redirect to the home page on success
       } else {
-        setError("OTP request failed. Please check your credentials.");
+        setError("OTP verification failed. Please check your credentials.");
       }
     } catch (err) {
       setError("Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleResendClick = async () => {
     try {
       // Make an HTTP POST request to resend OTP
@@ -76,6 +87,7 @@ const VerifyPage = () => {
       setError("OTP resend request failed. Please try again later.");
     }
   };
+
   return (
     <Box sx={{ width: "100%" }}>
       {/* Left Side: Background Image */}
@@ -93,7 +105,7 @@ const VerifyPage = () => {
               backgroundImage: `url(${backgroundImage})`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "center bottom",
+              backgroundPosition: "center ",
             }}
           ></Paper>
         </Grid>
@@ -146,59 +158,76 @@ const VerifyPage = () => {
                   </Box>
                 )}
               </Paper>
-              <Paper
-                sx={{
-                  padding: "20px",
-                  maxWidth: "400px",
-                  boxShadow: "none",
-                  background: "transparent",
-                  border: "none",
-                }}
-              >
-                {/* OTP input */}
-                <TextField
-                  type="text"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                {error && (
-                  <Typography
-                    variant="body2"
-                    color="error"
-                    sx={{ marginBottom: "1rem" }}
-                  >
-                    {error}
-                  </Typography>
-                )}
-                {/* Verify button */}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={handleVerifyClick}
-                >
-                  Verify
-                </Button>
-                {/* Resend OTP link */}
-                <Typography
+
+              {loading ? (
+                <Box
                   sx={{
-                    marginTop: "1rem",
-                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  variant="body2"
                 >
-                  Don&apos;t receive your code ?{" "}
-                  <span
-                    style={{ cursor: "pointer", color: "#1565C0" }}
-                    onClick={handleResendClick}
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Paper
+                  sx={{
+                    padding: "20px",
+                    maxWidth: "400px",
+                    boxShadow: "none",
+                    background: "transparent",
+                    border: "none",
+                  }}
+                >
+                  {/* OTP input */}
+                  <TextField
+                    type="text"
+                    label="OTP"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  {error && (
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      sx={{ marginBottom: "1rem" }}
+                    >
+                      {error}
+                    </Typography>
+                  )}
+                  {/* Verify button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={handleVerifyClick}
                   >
-                    Resend
-                  </span>
-                </Typography>
-              </Paper>
+                    Verify
+                  </Button>
+                  {/* Resend OTP link */}
+                  <Typography
+                    sx={{
+                      marginTop: "1rem",
+                      textAlign: "center",
+                    }}
+                    variant="body2"
+                  >
+                    Don't receive your code ?{" "}
+                    <span
+                      style={{ cursor: "pointer", color: "#1565C0" }}
+                      onClick={handleResendClick}
+                    >
+                      Resend
+                    </span>
+                  </Typography>
+                </Paper>
+              )}
             </Grid>
             <Box sx={{ textAlign: "center" }}>
               {/* Footer information */}
@@ -209,11 +238,23 @@ const VerifyPage = () => {
                   boxShadow: "none",
                   background: "transparent",
                   border: "none",
+                  display: "flex",
                 }}
               >
-                <AiOutlineCopyright /> {year} oCare Web Portal |{" "}
-                <Link to="/" style={{ textDecoration: "none" }}>
-                  <span style={{ color: "#1565C0" }}>Privacy & Policy</span>
+                <AiOutlineCopyright
+                  style={{ marginTop: "5px", marginRight: "5px" }}
+                />{" "}
+                {year} oCare Web Portal |
+                <Link style={{ textDecoration: "none" }}>
+                  <Typography
+                    sx={{
+                      color: "#1565C0",
+                      marginLeft: "5px",
+                      marginTop: "2px",
+                    }}
+                  >
+                    Privacy & Policy
+                  </Typography>
                 </Link>
               </Paper>
             </Box>

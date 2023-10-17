@@ -18,9 +18,14 @@ export function AuthProvider({ children }) {
     setUserData(null);
   };
 
+  // Function to store the Reset OTP request data
+  const resetOTPRequest = (data) => {
+    setUserData(data);
+  };
+
   // Provide the authentication context to child components
   return (
-    <AuthContext.Provider value={{ userData, login, logout }}>
+    <AuthContext.Provider value={{ userData, login, logout, resetOTPRequest }}>
       {children}
     </AuthContext.Provider>
   );

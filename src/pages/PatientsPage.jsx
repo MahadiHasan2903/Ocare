@@ -36,6 +36,7 @@ const PatientsPage = () => {
             backgroundColor: "#f9f9f9",
             height: "92vh",
             overflowY: "hidden",
+            paddingBottom: "10px",
           }}
         >
           <Patients />

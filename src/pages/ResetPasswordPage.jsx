@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  // Importing Material-UI components
   Grid,
   Paper,
   Button,
@@ -14,69 +13,69 @@ import {
   InputLabel,
   CircularProgress,
 } from "@mui/material";
-import backgroundImage from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import { AiOutlineCopyright } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { countries } from "../utils/countryCode";
 import axios from "../axios.js";
 import { useAuth } from "../context/AuthContext";
+import backgroundImage from "../assets/login-bg.png";
+import logo from "../assets/logo.png";
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
   // State variables for user input and error handling
   const [selectedCountry, setSelectedCountry] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { resetOTPRequest } = useAuth();
   const year = new Date().getFullYear();
+  const [loading, setLoading] = useState(false);
 
-  // Handle login button click
-  const handleLoginClick = async (e) => {
+  // Function to handle the password reset request
+  const handleReset = async (e) => {
     e.preventDefault();
 
     try {
       setLoading(true);
 
-      // Create an object with the login data
-      const loginData = {
+      // Create an object with the reset request data
+      const resetRequestData = {
         country_code: selectedCountry,
         phone_number: phoneNumber,
-        password,
-        role: "doctor",
       };
 
       // Send OTP request to the server
-      const response = await axios.post("/login-request-otp", loginData);
+      const response = await axios.post(
+        "/forget-password-otp",
+        resetRequestData
+      );
 
-      // Check if the OTP request was successful
       if (response.status === 200) {
-        // If successful, store the login data in the context
-        login(loginData);
+        // If successful, store the reset request data in the context
+        resetOTPRequest(resetRequestData);
 
-        // Redirect to VerifyPage
-        navigate("/verify");
+        // Redirect to the Confirm Password Page
+        navigate("/confirm-password");
       } else {
         setError("OTP request failed. Please check your credentials.");
       }
     } catch (err) {
-      setError("Login failed. Please check your credentials.");
+      setError("OTP request failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Render the component
   return (
     <Box sx={{ width: "100%" }}>
-      {/* Left Side: Background Image */}
       <Grid
         container
         justifyContent="center"
         alignItems="center"
         sx={{ height: "100vh" }}
       >
+        {/* Left Side: Background Image */}
         <Grid item xs={12} sm={6}>
           <Paper
             sx={{
@@ -90,7 +89,7 @@ const LoginPage = () => {
           ></Paper>
         </Grid>
 
-        {/* Right Side: Login Form */}
+        {/* Right Side: Reset Password Form */}
         <Grid
           item
           xs={12}
@@ -133,10 +132,10 @@ const LoginPage = () => {
                   variant="h4"
                   gutterBottom
                 >
-                  Login
+                  Request Password Reset
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Login to oCare doctor panel
+                  Send a request for a password reset.
                 </Typography>
               </Paper>
 
@@ -206,21 +205,6 @@ const LoginPage = () => {
                       />
                     </Box>
 
-                    {/* Password input */}
-                    <TextField
-                      required
-                      label="Password"
-                      type="password"
-                      variant="outlined"
-                      fullWidth
-                      margin="normal"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-
                     {/* Error message */}
                     {error && (
                       <Typography
@@ -232,19 +216,17 @@ const LoginPage = () => {
                       </Typography>
                     )}
 
-                    {/* Login button */}
+                    {/* Reset button */}
                     <Button
                       variant="contained"
                       color="primary"
                       fullWidth
-                      onClick={handleLoginClick}
+                      onClick={handleReset}
                     >
-                      Login
+                      Request Password Reset
                     </Button>
-                    <Link
-                      to="/reset-password"
-                      style={{ textDecoration: "none" }}
-                    >
+
+                    <Link to="/login" style={{ textDecoration: "none" }}>
                       <Typography
                         sx={{
                           color: "#1565C0",
@@ -254,7 +236,7 @@ const LoginPage = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Forget Password ?
+                        Back to Login
                       </Typography>
                     </Link>
                   </Paper>
@@ -275,7 +257,7 @@ const LoginPage = () => {
               >
                 <AiOutlineCopyright
                   style={{ marginTop: "5px", marginRight: "5px" }}
-                />{" "}
+                />
                 {year} oCare Web Portal |
                 <Link style={{ textDecoration: "none" }}>
                   <Typography
@@ -297,4 +279,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;

@@ -11,6 +11,8 @@ import SettingPage from "./pages/SettingPage";
 import SupportPage from "./pages/SupportPage";
 import PatienstPage from "./pages/PatientsPage";
 import InfinniteSchollingPage from "./pages/InfiniteScrollingPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ConfirmPasswordPage from "./pages/ConfirmPasswordPage";
 
 function App() {
   return (
@@ -20,6 +22,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/confirm-password" element={<ConfirmPasswordPage />} />
+
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route
             path="/create-prescription"

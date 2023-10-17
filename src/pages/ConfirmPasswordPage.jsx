@@ -1,68 +1,79 @@
 import React, { useState } from "react";
 import {
-  // Importing Material-UI components
   Grid,
   Paper,
   Button,
   Typography,
   TextField,
   Box,
-  Select,
-  MenuItem,
   FormControl,
-  Hidden,
-  InputLabel,
   CircularProgress,
 } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import backgroundImage from "../assets/login-bg.png";
 import logo from "../assets/logo.png";
 import { AiOutlineCopyright } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-import { countries } from "../utils/countryCode";
 import axios from "../axios.js";
 import { useAuth } from "../context/AuthContext";
 
-const LoginPage = () => {
-  // State variables for user input and error handling
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+const ConfirmPasswordPage = () => {
+  const [otp, setOtp] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { userData } = useAuth();
   const year = new Date().getFullYear();
 
-  // Handle login button click
-  const handleLoginClick = async (e) => {
+  // Extract user data
+  const country_code = userData?.country_code;
+  const phone_number = userData?.phone_number;
+
+  console.log(country_code);
+  console.log(phone_number);
+
+  // Function to obscure part of the phone number for privacy
+  const unRevealedPhoneNumber = (phone_number) => {
+    const firstTwo = phone_number.slice(0, 2);
+    const lastTwo = phone_number.slice(-2);
+    const middleStars = "*".repeat(phone_number.length - 4);
+    return firstTwo + middleStars + lastTwo;
+  };
+
+  // Function to handle the confirmation of password reset
+  const handleConfirmPassword = async (e) => {
     e.preventDefault();
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      setError("Password and confirm password do not match.");
+      return;
+    }
 
     try {
       setLoading(true);
 
-      // Create an object with the login data
-      const loginData = {
-        country_code: selectedCountry,
-        phone_number: phoneNumber,
+      // Send a request to confirm the password reset
+      const response = await axios.post("/confirm-forget-password-otp", {
+        country_code,
+        phone_number,
+        otp,
         password,
-        role: "doctor",
-      };
+        confirm_password: confirmPassword,
+      });
 
-      // Send OTP request to the server
-      const response = await axios.post("/login-request-otp", loginData);
-
-      // Check if the OTP request was successful
-      if (response.status === 200) {
-        // If successful, store the login data in the context
-        login(loginData);
-
-        // Redirect to VerifyPage
-        navigate("/verify");
+      // Check if the password reset was successful
+      if (response.data.success) {
+        toast.success("Password Reset successful!");
+        navigate("/login");
       } else {
-        setError("OTP request failed. Please check your credentials.");
+        setError("Password Reset failed. Please check your credentials.");
       }
     } catch (err) {
-      setError("Login failed. Please check your credentials.");
+      setError("Password Reset failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +81,6 @@ const LoginPage = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      {/* Left Side: Background Image */}
       <Grid
         container
         justifyContent="center"
@@ -89,8 +99,6 @@ const LoginPage = () => {
             }}
           ></Paper>
         </Grid>
-
-        {/* Right Side: Login Form */}
         <Grid
           item
           xs={12}
@@ -133,10 +141,16 @@ const LoginPage = () => {
                   variant="h4"
                   gutterBottom
                 >
-                  Login
+                  New Password
                 </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Login to oCare doctor panel
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  sx={{ fontSize: "18px" }}
+                >
+                  Enter the OTP verification code that was sent to{" "}
+                  {unRevealedPhoneNumber(userData.phone_number)} and set a new
+                  password.
                 </Typography>
               </Paper>
 
@@ -161,56 +175,23 @@ const LoginPage = () => {
                       border: "none",
                     }}
                   >
-                    {/* User input fields */}
-                    <Box sx={{ display: "flex", width: "400px" }}>
-                      <FormControl
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        sx={{ width: "25%", marginRight: "10px" }}
-                      >
-                        <Hidden lgDown>
-                          <InputLabel id="country-select-label">
-                            Select
-                          </InputLabel>
-                        </Hidden>
-                        <Select
-                          labelId="country-select-label"
-                          id="country-select"
-                          label="Select"
-                          value={selectedCountry}
-                          onChange={(e) => setSelectedCountry(e.target.value)}
-                        >
-                          {countries.map((option) => (
-                            <MenuItem key={option.code} value={option.iso}>
-                              {option.iso}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-
-                      {/* Phone number input */}
-                      <TextField
-                        required
-                        sx={{ width: "75%" }}
-                        label="Phone Number"
-                        type="text"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                    </Box>
-
-                    {/* Password input */}
                     <TextField
-                      required
+                      sx={{ width: "100%" }}
+                      label="OTP"
+                      type="text"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                    <TextField
+                      sx={{ width: "100%" }}
                       label="Password"
-                      type="password"
+                      type="text"
                       variant="outlined"
                       fullWidth
                       margin="normal"
@@ -220,8 +201,19 @@ const LoginPage = () => {
                         shrink: true,
                       }}
                     />
-
-                    {/* Error message */}
+                    <TextField
+                      sx={{ width: "100%", marginBottom: "25px" }}
+                      label="Confirm Password"
+                      type="text"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
                     {error && (
                       <Typography
                         variant="body2"
@@ -232,19 +224,15 @@ const LoginPage = () => {
                       </Typography>
                     )}
 
-                    {/* Login button */}
                     <Button
                       variant="contained"
                       color="primary"
                       fullWidth
-                      onClick={handleLoginClick}
+                      onClick={handleConfirmPassword}
                     >
-                      Login
+                      Confirm Password Reset
                     </Button>
-                    <Link
-                      to="/reset-password"
-                      style={{ textDecoration: "none" }}
-                    >
+                    <Link to="/login" style={{ textDecoration: "none" }}>
                       <Typography
                         sx={{
                           color: "#1565C0",
@@ -254,7 +242,7 @@ const LoginPage = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Forget Password ?
+                        Back to Login
                       </Typography>
                     </Link>
                   </Paper>
@@ -262,7 +250,6 @@ const LoginPage = () => {
               )}
             </Grid>
             <Box sx={{ textAlign: "center" }}>
-              {/* Footer information */}
               <Paper
                 sx={{
                   padding: "20px",
@@ -275,9 +262,9 @@ const LoginPage = () => {
               >
                 <AiOutlineCopyright
                   style={{ marginTop: "5px", marginRight: "5px" }}
-                />{" "}
+                />
                 {year} oCare Web Portal |
-                <Link style={{ textDecoration: "none" }}>
+                <Link to="/" style={{ textDecoration: "none" }}>
                   <Typography
                     sx={{
                       color: "#1565C0",
@@ -297,4 +284,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ConfirmPasswordPage;

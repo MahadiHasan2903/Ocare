@@ -10,6 +10,7 @@ import {
   Paper,
   TablePagination,
   Typography,
+  TableFooter,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPatients } from "../redux/actions/patientAction";
@@ -95,8 +96,8 @@ const Patients = () => {
           </Table>
         </TableContainer>
 
-        <Box
-          sx={{
+        <TableFooter
+          style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -117,7 +118,7 @@ const Patients = () => {
           >
             Page {page + 1} of {totalPages}
           </Typography>
-        </Box>
+        </TableFooter>
       </Box>
     </Box>
   );
